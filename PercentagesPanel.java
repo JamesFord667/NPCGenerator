@@ -1,9 +1,14 @@
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.GridLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.FocusEvent;
+
+import javax.swing.JFormattedTextField;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
-import javax.swing.JTextField;
+import javax.swing.text.MaskFormatter;
 
 @SuppressWarnings("serial")
 public class PercentagesPanel extends JPanel {
@@ -18,7 +23,9 @@ public class PercentagesPanel extends JPanel {
 	private MyLabel tieflingOdds = new MyLabel();	
 	private MyLabel dragonbornOdds = new MyLabel();	
 	private MyLabel halforcOdds = new MyLabel();	
-	private MyLabel total = new MyLabel();
+	private MyLabel totalOdds = new MyLabel();
+	private MyLabel raceLabel = new MyLabel();
+	private MyLabel oddsLabel = new MyLabel();
 	
 	//text fields to take input from users on percentage
 	private MyTextField humanText = new MyTextField();
@@ -30,17 +37,40 @@ public class PercentagesPanel extends JPanel {
 	private MyTextField dragonbornText = new MyTextField();
 	private MyTextField halforcText = new MyTextField();
 	private MyTextField halfelfText = new MyTextField();
+	private MyTextField totalText = new MyTextField();
 	
 	private String[][] races;	//holds the table with percentages and races
 	
 	private Font text = new Font("Franklin Gothic Medium", Font.BOLD, 30);	//font for the text
+	private Color darkerRed = new Color(223, 2, 35);	  //color used for text. The default red was too bright, this is better
+	
+
+	//taken off of oracle's website. It makes the Formatted Text Field work the way it should
+	protected MaskFormatter createFormatter(String s) 
+	{
+		MaskFormatter formatter = null;
+		try 
+		{
+			formatter = new MaskFormatter(s);
+		} 
+		catch (java.text.ParseException exc) 
+		{
+			System.err.println("formatter is bad: " + exc.getMessage());
+			System.exit(-1);
+		}
+		return formatter;
+	}
+	
 	
 	public PercentagesPanel(RacePercentages odds)
 	{		
 		races = odds.getAll();		//set the string to equal the percentages and races
 		
 		//panel settings
-		setLayout(new GridLayout(10, 2));
+		setLayout(new GridLayout(11, 2));
+		add(raceLabel);
+		add(oddsLabel);
+		
 		add(humanOdds); 
 		add(humanText);
 		
@@ -68,22 +98,29 @@ public class PercentagesPanel extends JPanel {
 		add(halforcOdds);
 		add(halforcText);
 		
-		add(total);
+		add(totalOdds);
+		add(totalText);
 		setBackground(Color.black);
 		
 		//label settings
 		//add text to labels
-		humanOdds.setText(races[0][0] + ": " + races[0][1] + "%");
-		elfOdds.setText(races[2][0] + ": " + races[2][1] + "%");
-		dwarfOdds.setText(races[1][0] + ": " + races[1][1] + "%");
-		gnomeOdds.setText(races[5][0] + ": " + races[5][1] + "%");
-		halflingOdds.setText(races[3][0] + ": " + races[3][1] + "%");
-		halfelfOdds.setText(races[6][0] + ": " + races[6][1] + "%");
-		halforcOdds.setText(races[7][0] + ": " + races[7][1] + "%");
-		tieflingOdds.setText(races[8][0] + ": " + races[8][1] + "%");
-		dragonbornOdds.setText(races[4][0] + ": " + races[4][1] + "%");
+		raceLabel.setText("Race");
+		oddsLabel.setText("Odds");
+		humanOdds.setText(races[0][0] + ": " /*+ races[0][1] + "%"*/);
+		elfOdds.setText(races[2][0] + ": " /*+ races[2][1] + "%"*/);
+		dwarfOdds.setText(races[1][0] + ": " /*+ races[1][1] + "%"*/);
+		gnomeOdds.setText(races[5][0] + ": " /*+ races[5][1] + "%"*/);
+		halflingOdds.setText(races[3][0] + ": " /*+ races[3][1] + "%"*/);
+		halfelfOdds.setText(races[6][0] + ": " /*+ races[6][1] + "%"*/);
+		halforcOdds.setText(races[7][0] + ": " /*+ races[7][1] + "%"*/);
+		tieflingOdds.setText(races[8][0] + ": " /*+ races[8][1] + "%"*/);
+		dragonbornOdds.setText(races[4][0] + ": " /*+ races[4][1] + "%"*/);
 		
 		//makes the labels look nice
+		raceLabel.format();
+		raceLabel.setForeground(darkerRed);		//editing the color for visibility
+		oddsLabel.format();
+		oddsLabel.setForeground(darkerRed);		//editing the color for visibility
 		humanOdds.format();
 		elfOdds.format();
 		dwarfOdds.format();
@@ -95,8 +132,8 @@ public class PercentagesPanel extends JPanel {
 		dragonbornOdds.format();
 		
 		//puts the total percentage represented into the 'total' label
-		total.setText("Total: " + String.valueOf(odds.percentSum()) + "%");
-		total.format();
+		totalOdds.setText("Total: " /*+ String.valueOf(odds.percentSum()) + "%"*/);
+		totalOdds.format();
 		
 		//textField settings
 		humanText.format();
@@ -108,6 +145,23 @@ public class PercentagesPanel extends JPanel {
 		dragonbornText.format();
 		halfelfText.format();
 		halforcText.format();
+		
+		totalText.format();
+		totalText.setEditable(false);
+		
+		//sets the textField initial values
+		humanText.setText(races[0][1]);
+		elfText.setText(races[2][1]);
+		dwarfText.setText(races[1][1]);
+		halflingText.setText(races[3][1]);
+		gnomeText.setText(races[5][1]);
+		tieflingText.setText(races[8][1]);
+		dragonbornText.setText(races[4][1]);
+		halfelfText.setText(races[6][1]);
+		halforcText.setText(races[7][1]);
+		totalText.setText(String.valueOf(odds.percentSum()));
+		
+		//System.out.println(humanText.getText());
 	}
 	
 	//class to make editing the labels easier
@@ -115,18 +169,44 @@ public class PercentagesPanel extends JPanel {
 	{
 		private void format()
 		{
-			this.setForeground(Color.green);
-			this.setFont(text);
-			this.setHorizontalAlignment(JLabel.CENTER);  //Is this actually doing anything? I can't tell if it is
+			this.setForeground(Color.green);		//sets the text color
+			this.setFont(text);						//makes the font look nice
+			this.setHorizontalAlignment(CENTER);  //Is this actually doing anything? I can't tell if it is
 		}
 	}
 	
-	class MyTextField extends JTextField
+	//custom textField used so that the formatting is easier to do
+	class MyTextField extends JFormattedTextField
 	{
+		//Formatter form = new Formatter();
 		private void format()
 		{
-			this.setFont(text);
+			this.setFont(text);				//sets the font to look nice
+			this.setColumns(3);
+			this.setBackground(Color.darkGray);			//provides the background color
+			this.setForeground(Color.white);			//provides the text color
+			this.setHorizontalAlignment(CENTER);		//centers the text in the field
+			this.setFormatter(createFormatter("###"));	//sets the format to only allow numeric inputs
+			this.setCaretColor(Color.white);			//needed for visibility of the cursor			
 		}
+		
+		public void focusLost(FocusEvent e)
+		{
+			//this.setText(this.getText());
+			System.out.println("Focus lost");
+		}
+		
 	}
+	
+	class TextListener implements ActionListener
+	{
+		public TextListener() {};
 
+		@Override
+		public void actionPerformed(ActionEvent e) 
+		{
+			//totalText.setText(String.valueOf(odds.percentSum()));
+		}	
+	}
+	
 }

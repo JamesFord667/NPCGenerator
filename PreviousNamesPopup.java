@@ -49,14 +49,14 @@ public class PreviousNamesPopup {
 		panel.add(secondName);
 		panel.add(thirdName);
 		panel.add(closeButton);
-		panel.setBackground(Color.white);
+		panel.setBackground(Color.lightGray);
 		
 		//button settings
 		closeButton.setFont(new Font("Franklin Gothic Medium", Font.BOLD, 48));
 		closeButton.setForeground(Color.red);
-		closeButton.setBackground(Color.white);
-		closeButton.setHoverBackgroundColor(Color.gray);
-		closeButton.setPressedBackgroundColor(Color.gray);
+		closeButton.setBackground(Color.lightGray);
+		closeButton.setHoverBackgroundColor(Color.darkGray);
+		closeButton.setPressedBackgroundColor(Color.darkGray);
 		closeButton.addActionListener(listener);
 		closeButton.setBorderPainted(false);
 		closeButton.setFocusPainted(false);

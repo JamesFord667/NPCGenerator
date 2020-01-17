@@ -6,6 +6,7 @@
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Font;
+import java.awt.GridBagLayout;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -54,6 +55,7 @@ public class NPCInterface {
 		heading.setVerticalAlignment(JLabel.CENTER);
 		
 		//settings for the title panel
+		title.setLayout(new GridBagLayout());  //need this to get the text vertically centered. 
 		title.add(heading);
 		title.setBackground(Color.black);
 		
@@ -64,6 +66,7 @@ public class NPCInterface {
 		race.setFont(text);
 		
 		//settings for npc panel
+		npc.setLayout(new GridBagLayout());   //centers the text vertically
 		npc.add(race);
 		npc.add(name);
 		npc.setBackground(Color.black);
@@ -71,9 +74,9 @@ public class NPCInterface {
 		//settings for the 'output' panel
 		output.setLayout(new GridLayout(4, 1));
 		output.add(title);
+		output.add(npc);
 		output.add(generate);
 		output.add(showPreviousNames);
-		output.add(npc);
 		
 		//settings for output2 panel
 		output2.setLayout(new BorderLayout());
