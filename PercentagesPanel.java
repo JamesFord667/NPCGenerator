@@ -4,7 +4,6 @@ import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.FocusEvent;
-
 import javax.swing.JFormattedTextField;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -40,6 +39,9 @@ public class PercentagesPanel extends JPanel {
 	private MyTextField totalText = new MyTextField();
 	
 	private String[][] races;	//holds the table with percentages and races
+	private MyButton button = new MyButton("Update");
+	private TextListener textListen = new TextListener();
+	private JLabel emptyLabel = new JLabel();			//used as a placeholder so the button is in the right spot. 
 	
 	private Font text = new Font("Franklin Gothic Medium", Font.BOLD, 30);	//font for the text
 	private Color darkerRed = new Color(223, 2, 35);	  //color used for text. The default red was too bright, this is better
@@ -67,7 +69,7 @@ public class PercentagesPanel extends JPanel {
 		races = odds.getAll();		//set the string to equal the percentages and races
 		
 		//panel settings
-		setLayout(new GridLayout(11, 2));
+		setLayout(new GridLayout(12, 2));
 		add(raceLabel);
 		add(oddsLabel);
 		
@@ -100,6 +102,9 @@ public class PercentagesPanel extends JPanel {
 		
 		add(totalOdds);
 		add(totalText);
+		
+		add(emptyLabel);
+		add(button);
 		setBackground(Color.black);
 		
 		//label settings
@@ -161,7 +166,11 @@ public class PercentagesPanel extends JPanel {
 		halforcText.setText(races[7][1]);
 		totalText.setText(String.valueOf(odds.percentSum()));
 		
-		//System.out.println(humanText.getText());
+		//make the button look nice
+				button.setFont(text);
+				button.setBackground(Color.darkGray);
+				button.setForeground(Color.green);
+				button.addActionListener(textListen);
 	}
 	
 	//class to make editing the labels easier
@@ -198,14 +207,35 @@ public class PercentagesPanel extends JPanel {
 		
 	}
 	
+	//listener to go on the button at the bottom
 	class TextListener implements ActionListener
 	{
-		public TextListener() {};
+		public TextListener() {}
 
 		@Override
 		public void actionPerformed(ActionEvent e) 
 		{
-			//totalText.setText(String.valueOf(odds.percentSum()));
+			//System.out.println("Clicked");  //debug
+			
+			races[0][1] = humanText.getText();
+			races[1][1] = dwarfText.getText();
+			races[2][1] = elfText.getText();
+			races[3][1] = halflingText.getText();
+			races[4][1] = dragonbornText.getText();
+			races[5][1] = gnomeText.getText();
+			races[6][1] = halfelfText.getText();
+			races[7][1] = halforcText.getText();
+			races[8][1] = tieflingText.getText();
+			
+			int sum = 0;
+			for(int i = 0; i < 9; i++)
+			{
+				String a = races[i][1].replaceAll("\\s","");
+				sum += Integer.parseInt(a);
+			}
+			
+			totalText.setText(String.valueOf(sum));
+			
 		}	
 	}
 	
